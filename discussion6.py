@@ -25,14 +25,7 @@ def load_csv(f):
 
 
 def get_annual_max(d):
-    '''
-    Params:
-        d, dict created by load_csv above
-
-    Returns:
-        list of tuples, each with 3 items: year (str), month (str), and max (int)
-        max is the maximum value for a month in that year, month is the corresponding month
-    '''
+   
     results = []
 
     # Iterate through each year in the data
@@ -46,7 +39,6 @@ def get_annual_max(d):
     results.sort(key=lambda x: (x[0], x[1]))  # Sort by year, then by month (if needed)
 
     return results
-
 
 
 def get_month_avg(d):
