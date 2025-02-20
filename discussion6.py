@@ -27,8 +27,6 @@ def load_csv(f):
 def get_annual_max(d):
    
     results = []
-
-    # Iterate through each year in the data
     for year, months in d.items():
         # Find the month with the maximum visitors for the given year
         max_month = max(months.items(), key=lambda x: int(x[1]))  # Find month with max visitors for the year
