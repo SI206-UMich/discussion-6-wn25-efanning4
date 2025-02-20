@@ -1,51 +1,56 @@
 import unittest
 import os
-
+import csv
 
 def load_csv(f):
-    '''
-    Params: 
-        f, name or path or CSV file: string
-
-    Returns:
-        nested dict structure from csv
-        outer keys are (str) years, values are dicts
-        inner keys are (str) months, values are (str) integers
-    
-    Note: Don't strip or otherwise modify strings. Don't change datatypes from strings. 
-    '''
-
+  
     base_path = os.path.abspath(os.path.dirname(__file__))
     full_path = os.path.join(base_path, f)
-    # use this 'full_path' variable as the file that you open
+
+    data = {}  # Dictionary to store parsed CSV data
+
+    # Open CSV file and read data
+    with open(full_path, newline='', encoding='utf-8') as csvfile:
+        reader = csv.reader(csvfile)
+        next(reader)  # Skip header row
+
+        for row in reader:
+            if len(row) >= 3:  # Ensure there are at least 3 columns
+                year, month, value = row[:3]  # Unpack the first 3 columns
+                if year not in data:
+                    data[year] = {}
+                data[year][month] = value  # Store as string (as required)
+
+    return data
+
 
 def get_annual_max(d):
-    '''
-    Params:
-        d, dict created by load_csv above
+   
+    results = []
 
-    Returns:
-        list of tuples, each with 3 items: year (str), month (str), and max (int) 
-        max is the maximum value for a month in that year, month is the corresponding month
+    # Iterate through each year in the data
+    for year, months in d.items():
+        # Find the month with the maximum visitors for the given year
+        max_month = max(months.items(), key=lambda x: int(x[1]))  # Find month with max visitors for the year
+        # Store the result as a tuple with the year, month, and max visitors
+        results.append((year, max_month[0], int(max_month[1])))  # Store tuple (year, month, max)
 
-    Note: Don't strip or otherwise modify strings. Do not change datatypes except where necessary.
-        You'll have to change vals to int to compare them. 
-    '''
-    pass
+    # Sort results by year to ensure the order is correct
+    results.sort()
+
+    return results
+
 
 def get_month_avg(d):
-    '''
-    Params: 
-        d, dict created by load_csv above
+  
+    averages = {}
 
-    Returns:
-        dict where keys are years and vals are floats rounded to nearest whole num or int
-        vals are the average vals for months in the year
+    for year, months in d.items():
+        values = [int(value) for value in months.values()]  # Convert all values to int
+        avg = round(sum(values) / len(values))  # Compute and round average
+        averages[year] = avg  # Store in dictionary
 
-    Note: Don't strip or otherwise modify strings. Do not change datatypes except where necessary. 
-        You'll have to make the vals int or float here and round the avg to pass tests.
-    '''
-    pass
+    return averages
 
 class dis7_test(unittest.TestCase):
     '''
